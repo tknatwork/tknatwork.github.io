@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giga Map with Zoom Lens</title>
+    <style>
+        body {
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .map-container {
+            position: relative;
+            display: inline-block;
+            cursor: crosshair;
+        }
+        .map {
+            width: 1000px; /* Adjust to your needs */
+            height: auto;
+            display: block;
+        }
+        .zoom-lens {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border: 2px solid #000;
+            background-repeat: no-repeat;
+            pointer-events: none;
+            border-radius: 50%;
+            display: none;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Hover over the Giga Map to Zoom</h2>
+    <div class="map-container">
+        <img src="your-giga-map.jpg" alt="Giga Map" class="map" id="map">
+        <div class="zoom-lens" id="zoomLens"></div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const map = document.getElementById("map");
+            const lens = document.getElementById("zoomLens");
+
+            // Set background image to match map
+            lens.style.backgroundImage = `url(${map.src})`;
+
+            function moveLens(event) {
+                let rect = map.getBoundingClientRect();
+                let x = event.clientX - rect.left;
+                let y = event.clientY - rect.top;
+
+                // Position the lens
+                lens.style.left = `${x - lens.offsetWidth / 2}px`;
+                lens.style.top = `${y - lens.offsetHeight / 2}px`;
+
+                // Set background position to match the zoomed area
+                let bgX = (x / map.width) * 100;
+                let bgY = (y / map.height) * 100;
+                lens.style.backgroundPosition = `${bgX}% ${bgY}%`;
+                lens.style.backgroundSize = `${map.width * 2}px ${map.height * 2}px`;
+            }
+
+            map.addEventListener("mousemove", function (event) {
+                lens.style.display = "block";
+                moveLens(event);
+            });
+
+            map.addEventListener("mouseleave", function () {
+                lens.style.display = "none";
+            });
+        });
+    </script>
+
+</body>
+</html>
